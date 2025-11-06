@@ -1,0 +1,25 @@
+{
+  "name": "microcardapio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently -k -n CONTAINER,MENU,ORDER -c blue,green,magenta \"npm --prefix container start\" \"npm --prefix menu start\" \"npm --prefix order start\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/katerine-dev/MicroCardapio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/katerine-dev/MicroCardapio/issues"
+  },
+  "homepage": "https://github.com/katerine-dev/MicroCardapio#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
