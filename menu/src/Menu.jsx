@@ -1,6 +1,11 @@
 import React, { useMemo } from 'react';
 
-const EVENT_NAME = 'cart:add-item';
+import {
+  EVENT_NAME,
+  appendCartItem,
+  createPersistedEventDetail,
+  normalizeCartItem,
+} from '../../order/src/events';
 
 // importe as imagens locais:
 import imgEstrela from './assets/estrelados.png';
@@ -53,7 +58,13 @@ export default function Menu() {
   
 
   const add = (item) => {
-    window.dispatchEvent(new CustomEvent(EVENT_NAME, { detail: item }));
+    console.log('[menu] dispatch', item);
+    const cartItem = normalizeCartItem(item);
+
+    appendCartItem(cartItem);
+
+    console.log('[menu] dispatch', cartItem);
+    window.dispatchEvent(new CustomEvent(EVENT_NAME, { detail: createPersistedEventDetail(cartItem) }));
   };
 
   return (

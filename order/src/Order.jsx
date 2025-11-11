@@ -1,6 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-const EVENT_NAME = 'cart:add-item';
+import {
+  EVENT_NAME,
+  appendCartItem,
+  clearCartItems,
+  getCartItems,
+  subscribeToCart,
+} from './events';
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(value) || 0);
@@ -10,16 +16,36 @@ export default function Order() {
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    const handleAdd = (event) => {
-      const item = event.detail;
-      if (!item) return;
+    console.log('[order] mount');
 
-      setItems((prev) => [...prev, item]);
+    setItems(getCartItems());
+
+    const unsubscribe = subscribeToCart((nextItems) => {
+      setItems(nextItems);
+      if (nextItems.length > 0) {
+        setSubmitted(false);
+      }
+    });
+
+    const handleAdd = (event) => {
+      const detail = event?.detail;
+      console.log('[order] receive', detail);
+      if (!detail) return;
+
+      if (!detail.__persisted) {
+        appendCartItem(detail);
+      }
       setSubmitted(false);
     };
 
     window.addEventListener(EVENT_NAME, handleAdd);
-    return () => window.removeEventListener(EVENT_NAME, handleAdd);
+  
+    return () => {
+      window.removeEventListener(EVENT_NAME, handleAdd);
+      if (typeof unsubscribe === 'function') {
+        unsubscribe();
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -30,14 +56,17 @@ export default function Order() {
       setSubmitted(false);
     }, 3000);
 
-   return () => window.clearTimeout(timeout);
-  }, [submitted])
+    return () => window.clearTimeout(timeout);
+  }, [submitted]);
 
   const total = useMemo(
     () => items.reduce((acc, item) => acc + (Number(item.price) || 0), 0),
     [items]
   );
-    const handleSubmit = () => setSubmitted(true);
+  const handleSubmit = () => {
+    setSubmitted(true);
+    clearCartItems();
+  };
 
   if (submitted) {
     return (
