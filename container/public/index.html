@@ -2,10 +2,19 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Micro Frontend - container</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Container</title>
+    <style>
+      body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+      header{position:sticky;top:0;background:#fff;border-bottom:1px solid #eee;padding:12px 16px;font-weight:600}
+      .wrap{padding:16px;max-width:1100px;margin:0 auto}
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+      .card{border:1px solid #e5e7eb;border-radius:12px;background:#fff}
+      .title{font-size:18px;margin:0 0 12px}
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <header>DuckDuckGoats</header>
+    <div id="root" class="wrap"></div>
   </body>
 </html>

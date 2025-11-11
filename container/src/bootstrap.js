@@ -6,16 +6,16 @@ const Order = React.lazy(() => import('order/Order'));
 
 function App() {
   return (
-    <div style={{ fontFamily: 'sans-serif', padding: 16 }}>
-      <h1>Container</h1>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-        <div style={{ border: '1px solid #ddd', borderRadius: 8 }}>
-          <Suspense fallback={<p>Carregando Cardápio...</p>}>
+    <div>
+      <h2 className="title">Cardápio e Pedido</h2>
+      <div className="grid">
+        <div className="card">
+          <Suspense fallback={<p style={{padding:16}}>Carregando Cardápio…</p>}>
             <Menu />
           </Suspense>
         </div>
-        <div style={{ border: '1px solid #ddd', borderRadius: 8 }}>
-          <Suspense fallback={<p>Carregando Pedido...</p>}>
+        <div className="card">
+          <Suspense fallback={<p style={{padding:16}}>Carregando Pedido…</p>}>
             <Order />
           </Suspense>
         </div>

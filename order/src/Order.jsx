@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from 'react';
 
 export default function Order() {
-  const [itens, setItens] = useState([]);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
-    const onAdd = (e) => setItens((prev) => [...prev, e.detail]);
+    const onAdd = (e) => setItems((prev) => [...prev, e.detail]);
     window.addEventListener('add-item', onAdd);
     return () => window.removeEventListener('add-item', onAdd);
   }, []);
 
-  const total = itens.reduce((acc, i) => acc + (i.preco || 0), 0);
+  const removeAt = (idx) => setItems((prev) => prev.filter((_, i) => i !== idx));
+  const clear = () => setItems([]);
+  const total = items.reduce((acc, i) => acc + (i.price || 0), 0);
 
   return (
-    <div style={{ padding: 16 }}>
-      <h2>Pedido</h2>
-      {itens.length === 0 ? (
-        <p>Nenhum item ainda.</p>
+    <div className="box">
+      <h3 style={{marginTop:0}}>Pedido</h3>
+      {items.length === 0 ? (
+        <p className="muted">Nenhum item adicionado.</p>
       ) : (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          {itens.map((i, idx) => (
-            <li key={`${i.id}-${idx}`} style={{ marginBottom: 8 }}>
-              {i.nome} — R$ {i.preco}
-            </li>
+        <>
+          {items.map((i, idx) => (
+            <div className="row" key={`${i.id}-${idx}`}>
+              <span className="name">{i.name}</span>
+              <span>R$ {i.price.toFixed(2)}</span>
+              <button className="remove" onClick={() => removeAt(idx)}>remover</button>
+            </div>
           ))}
-        </ul>
+          <div className="total">Total: R$ {total.toFixed(2)}</div>
+          <button className="clear" onClick={clear}>Limpar pedido</button>
+        </>
       )}
-      <hr />
-      <p><strong>Total:</strong> R$ {total}</p>
     </div>
   );
 }

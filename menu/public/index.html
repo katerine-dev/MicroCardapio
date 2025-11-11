@@ -2,8 +2,20 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Micro Frontend - Menu</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Menu</title>
+    <style>
+      body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+      .menu{padding:16px}
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+      .item{border:1px solid #e5e7eb;border-radius:12px;background:#fff;padding:12px;display:flex;flex-direction:column;align-items:center}
+      .imgwrap{width:100%;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#f6f6f6;display:flex;align-items:center;justify-content:center}
+      .imgwrap img{width:100%;height:100%;object-fit:cover}
+      .name{margin:12px 0 4px;font-size:18px;font-weight:600;color:#333}
+      .price{margin:0 0 12px;color:#444;font-weight:600}
+      .btn{border:none;background:#1780A3;color:#fff;border-radius:10px;padding:10px 12px;cursor:pointer}
+      @media (max-width: 720px){ .grid{grid-template-columns:1fr} }
+    </style>
   </head>
   <body>
     <div id="root"></div>

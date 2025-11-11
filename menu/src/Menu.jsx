@@ -1,32 +1,57 @@
-import React, { useState } from 'react';
+import React, { useMemo } from 'react';
 
-const LISTA = [
-  { id: 1, nome: 'Spaghetti', descricao: 'Massa ao sugo', preco: 35 },
-  { id: 2, nome: 'Risotto', descricao: 'Cogumelos frescos', preco: 42 },
-  { id: 3, nome: 'Salada Caesar', descricao: 'Clássica', preco: 28 }
+const ITEMS = [
+  {
+    id: 1,
+    name: 'Chef Special',
+    desc: 'Molho da casa com especiarias',
+    price: 25,
+    img: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=600&auto=format&fit=crop'
+  },
+  {
+    id: 2,
+    name: 'Dim Sum',
+    desc: 'Seleção artesanal',
+    price: 25,
+    img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=600&auto=format&fit=crop'
+  },
+  {
+    id: 3,
+    name: 'Eggs Supreme',
+    desc: 'Ovos cremosos com ervas',
+    price: 25,
+    img: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=600&auto=format&fit=crop'
+  },
+  {
+    id: 4,
+    name: 'Healthy Herbs',
+    desc: 'Caldo leve de legumes',
+    price: 25,
+    img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&auto=format&fit=crop'
+  }
 ];
 
 export default function Menu() {
-  const [itens] = useState(LISTA);
+  const list = useMemo(() => ITEMS, []);
 
-  const adicionar = (item) => {
-    // Comunicação global simples: emite evento que o micro "order" escuta
+  const add = (item) => {
     window.dispatchEvent(new CustomEvent('add-item', { detail: item }));
   };
 
   return (
-    <div style={{ padding: 16 }}>
-      <h2>Cardápio</h2>
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        {itens.map((i) => (
-          <li key={i.id} style={{ marginBottom: 8, border: '1px solid #ddd', padding: 8, borderRadius: 8 }}>
-            <strong>{i.nome}</strong> — {i.descricao} — R$ {i.preco}
-            <button style={{ marginLeft: 8 }} onClick={() => adicionar(i)}>
-              Adicionar ao pedido
-            </button>
-          </li>
+    <div className="menu">
+      <div className="grid">
+        {list.map((it) => (
+          <div className="item" key={it.id} title={it.desc}>
+            <div className="imgwrap">
+              <img src={it.img} alt={it.name} loading="lazy" />
+            </div>
+            <div className="name">{it.name}</div>
+            <div className="price">R$ {it.price.toFixed(2)}</div>
+            <button className="btn" onClick={() => add(it)}>Adicionar ao pedido</button>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
