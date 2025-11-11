@@ -2,104 +2,119 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 const EVENT_NAME = 'cart:add-item';
 
-const DELIVERY_SLOT = '13:00 – 13:30';
-
 const formatCurrency = (value) =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(value) || 0);
 
 export default function Order() {
   const [items, setItems] = useState([]);
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    const onAdd = (event) => {
+    const handleAdd = (event) => {
       const item = event.detail;
       if (!item) return;
 
-      const normalized = {
-        ...item,
-        price: Number(item.price) || 0,
-      };
-
-      setItems((prev) => {
-        const index = prev.findIndex((entry) => entry.id === normalized.id);
-        if (index >= 0) {
-          const updated = [...prev];
-          updated[index] = {
-            ...updated[index],
-            quantity: updated[index].quantity + 1,
-          };
-          return updated;
-        }
-
-        return [...prev, { ...normalized, quantity: 1 }];
-      });
+      setItems((prev) => [...prev, item]);
+      setSubmitted(false);
     };
 
-    window.addEventListener(EVENT_NAME, onAdd);
-    return () => window.removeEventListener(EVENT_NAME, onAdd);
+    window.addEventListener(EVENT_NAME, handleAdd);
+    return () => window.removeEventListener(EVENT_NAME, handleAdd);
   }, []);
 
-  const remove = (id) =>
-    setItems((prev) =>
-      prev
-        .map((item) =>
-          item.id === id
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
+  useEffect(() => {
+    if (!submitted) return undefined;
 
-  const clear = () => setItems([]);
+    const timeout = window.setTimeout(() => {
+      setItems([]);
+      setSubmitted(false);
+    }, 3000);
+
+   return () => window.clearTimeout(timeout);
+  }, [submitted])
 
   const total = useMemo(
-    () => items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+    () => items.reduce((acc, item) => acc + (Number(item.price) || 0), 0),
     [items]
   );
+    const handleSubmit = () => setSubmitted(true);
+
+  if (submitted) {
+    return (
+      <section className="order-card" aria-label="Resumo do pedido">
+        <style>
+          {`
+            @keyframes confetti-fall {
+              0% { transform: translateY(-20%) rotate(0deg); opacity: 0; }
+              10% { opacity: 1; }
+              100% { transform: translateY(120%) rotate(360deg); opacity: 0; }
+            }
+          `}
+        </style>
+        <div
+          style={{
+            minHeight: '280px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            gap: '1rem',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          {[...Array(12)].map((_, index) => (
+            <span
+              key={index}
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                top: '-10%',
+                left: `${(index / 12) * 100}%`,
+                fontSize: '1.5rem',
+                animation: 'confetti-fall 2.4s ease-in-out infinite',
+                animationDelay: `${index * 0.15}s`,
+              }}
+            >
+              {index % 2 === 0 ? '🎊' : '🎉'}
+            </span>
+          ))}
+
+          <div style={{ fontSize: '3rem' }} role="img" aria-label="Fogos de artifício">
+            🎉
+          </div>
+          <h2 style={{ margin: 0 }}>Pedido enviado!</h2>
+          <p style={{ margin: 0 }}>Estamos preparando tudo com carinho.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="order-card" aria-label="Resumo do pedido">
       <header className="order-card__header">
         <div className="order-card__title">
-          <span className="order-card__icon" aria-hidden="true">🧺</span>
+          <span className="order-card__icon" aria-hidden="true">
+            🧺
+          </span>
           <div>
             <p className="order-card__heading">Seu Pedido</p>
             <span className="order-card__subtitle">Itens adicionados a partir do cardápio</span>
           </div>
         </div>
-        {items.length > 0 && (
-          <button className="order-card__clear" type="button" onClick={clear}>
-            Limpar tudo
-          </button>
-        )}
       </header>
+
       {items.length === 0 ? (
         <p className="order-card__empty">Nenhum item adicionado ainda.</p>
       ) : (
         <>
           <ul className="order-card__list">
-            {items.map((item) => (
-              <li key={item.id} className="order-card__item">
+            {items.map((item, index) => (
+              <li key={`${item.id}-${index}`} className="order-card__item">
                 <div>
                   <p className="order-card__item-name">{item.name}</p>
-                  {item.info && <span className="order-card__item-info">{item.info}</span>}
-                  {item.desc && <span className="order-card__item-desc">{item.desc}</span>}
-                  <span className="order-card__item-qty">
-                    {item.quantity} × {formatCurrency(item.price)}
-                  </span>
-                </div>
-                <div className="order-card__item-actions">
-                  <span className="order-card__item-price">
-                    {formatCurrency(item.price * item.quantity)}
-                  </span>
-                  <button
-                    type="button"
-                    className="order-card__remove"
-                    onClick={() => remove(item.id)}
-                    aria-label={`Remover uma unidade de ${item.name}`}
-                  >
-                    remover 1
-                  </button>
+                  <span className="order-card__item-price">{formatCurrency(item.price)}</span>
                 </div>
               </li>
             ))}
@@ -110,15 +125,12 @@ export default function Order() {
               <dt>Total</dt>
               <dd>{formatCurrency(total)}</dd>
             </div>
-            <div className="order-card__totals-row">
-              <dt>Entrega estimada</dt>
-              <dd>{DELIVERY_SLOT}</dd>
-            </div>
           </dl>
-
-          <button className="order-card__confirm" type="button">
-            Confirmar pedido
-          </button>
+          {items.length > 0 && (
+            <button className="order-card__confirm" type="button" onClick={handleSubmit}>
+              Concluir pedido
+            </button>
+          )}
         </>
       )}
     </section>
