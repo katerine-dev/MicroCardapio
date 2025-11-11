@@ -1,41 +1,59 @@
 import React, { useMemo } from 'react';
 
+const EVENT_NAME = 'cart:add-item';
+
+// importe as imagens locais:
+import imgEstrela from './assets/estrelados.png';
+import imgCotidiano from './assets/cotidiano.png';
+import imgTabua from './assets/tabua.png';
+import imgOmega from './assets/omega3.png';
+
 const ITEMS = [
   {
     id: 1,
-    name: 'Chef Special',
-    desc: 'Molho da casa com especiarias',
-    price: 25,
-    img: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=600&auto=format&fit=crop'
+    name: 'Ovos Estrelados com Creme de Ricota',
+    info: '350 g',
+    desc: 'Flatbread com creme de ricota, tomate confit e azeite picante.',
+    price: 36.25,
+    img: imgEstrela
   },
   {
     id: 2,
-    name: 'Dim Sum',
-    desc: 'Seleção artesanal',
-    price: 25,
-    img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=600&auto=format&fit=crop'
+    name: 'Combo Cotitiano',
+    info: '200 ml',
+    desc: 'Mini baguete de fermentação natural com manteiga grelhada, porção de salada de frutas, ovos mexidos e café expresso.',
+    price: 42.4,
+    img: imgCotidiano
   },
   {
     id: 3,
-    name: 'Eggs Supreme',
-    desc: 'Ovos cremosos com ervas',
-    price: 25,
-    img: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=600&auto=format&fit=crop'
+    name: 'Tábua de Brunch com Frios',
+    info: '480 g',
+    desc: 'Tabua com queijo emmental, queijo brie, presunto royale, presunto cru, mini parfait (iogurte, granola e frutas), ovo cozido, pães de fermentação natural, croissant, gelei, manteiga e acompanhada de suco de laranja e uma bebida quente.',
+    price: 79.5,
+    img: imgTabua
   },
   {
     id: 4,
-    name: 'Healthy Herbs',
-    desc: 'Caldo leve de legumes',
-    price: 25,
-    img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&auto=format&fit=crop'
+    name: 'Omega 3 Tartine',
+    info: '1 fatia',
+    desc: 'Pão de fermentação natural integral, guacamole e granola caseira salgada.',
+    price: 28.3,
+    img: imgOmega
   }
 ];
 
 export default function Menu() {
   const list = useMemo(() => ITEMS, []);
 
+  const currency = useMemo(
+    () => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }),
+    []
+  );
+  
+
   const add = (item) => {
-    window.dispatchEvent(new CustomEvent('add-item', { detail: item }));
+    window.dispatchEvent(new CustomEvent(EVENT_NAME, { detail: item }));
   };
 
   return (
@@ -47,7 +65,9 @@ export default function Menu() {
               <img src={it.img} alt={it.name} loading="lazy" />
             </div>
             <div className="name">{it.name}</div>
-            <div className="price">R$ {it.price.toFixed(2)}</div>
+            <div className="info">{it.info}</div>
+            <p className="desc">{it.desc}</p>
+            <div className="price">{currency.format(it.price)}</div>
             <button className="btn" onClick={() => add(it)}>Adicionar ao pedido</button>
           </div>
         ))}

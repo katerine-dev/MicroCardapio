@@ -6,21 +6,28 @@ const Order = React.lazy(() => import('order/Order'));
 
 function App() {
   return (
-    <div>
-      <h2 className="title">Cardápio e Pedido</h2>
+    <main>
+      <section className="hero">
+        <h1 className="hero__title">Monte seu pedido</h1>
+        <p className="hero__subtitle">
+          Selecione seus pratos favoritos no cardápio e acompanhe o carrinho sendo montado em tempo real.
+        </p>
+      </section>
+
       <div className="grid">
-        <div className="card">
-          <Suspense fallback={<p style={{padding:16}}>Carregando Cardápio…</p>}>
+        <section className="card" aria-label="Cardápio">
+          <Suspense fallback={<p style={{ padding: 24 }}>Carregando Cardápio…</p>}>
             <Menu />
           </Suspense>
-        </div>
-        <div className="card">
-          <Suspense fallback={<p style={{padding:16}}>Carregando Pedido…</p>}>
+        </section>
+
+        <aside className="card" aria-label="Pedido">
+          <Suspense fallback={<p style={{ padding: 24 }}>Carregando Pedido…</p>}>
             <Order />
           </Suspense>
-        </div>
+       </aside>
       </div>
-    </div>
+     </main>
   );
 }
 

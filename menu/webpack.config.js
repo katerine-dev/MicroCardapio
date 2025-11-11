@@ -12,6 +12,7 @@ module.exports = {
   output: {
     publicPath: 'http://localhost:3001/',
     clean: true,
+    assetModuleFilename: 'images/[name][hash][ext][query]'
   },
   module: {
     rules: [
@@ -30,6 +31,11 @@ module.exports = {
           },
         },
       },
+      // <<< NOVO: suporte a imagens locais >>>
+      {
+        test: /\.(png|jpe?g|gif|svg|webp)$/i,
+        type: 'asset/resource'
+      }
     ],
   },
   plugins: [

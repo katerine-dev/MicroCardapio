@@ -5,15 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Pedido</title>
     <style>
-      body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-      .box{padding:16px}
-      .row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eee;padding:8px 0}
-      .row:last-child{border-bottom:0}
-      .name{font-weight:600}
-      .total{margin-top:12px;font-weight:700}
-      .muted{color:#666;font-size:14px}
-      .remove{border:none;background:#eee;border-radius:8px;padding:6px 10px;cursor:pointer}
-      .clear{border:none;background:#f7d7d7;color:#8a1f1f;border-radius:8px;padding:8px 10px;cursor:pointer;margin-top:10px}
+      :root{
+        color-scheme: light;
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+      *{box-sizing:border-box}
+      body{margin:0;background:#f5f6fb;color:#1f2933}
+      .order-card{padding:24px;display:flex;flex-direction:column;gap:24px;background:#fff;border-radius:24px;box-shadow:0 18px 40px rgba(15,23,42,0.12);max-width:420px;margin:0 auto}
+      .order-card__header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+      .order-card__title{display:flex;align-items:center;gap:12px}
+      .order-card__icon{font-size:28px}
+      .order-card__heading{margin:0;font-size:20px;font-weight:700;color:#0f172a}
+      .order-card__subtitle{font-size:13px;color:#64748b}
+      .order-card__clear{margin-left:auto;border:none;background:transparent;color:#ef4565;font-weight:600;cursor:pointer;padding:6px 8px;border-radius:8px;transition:background .2s ease,color .2s ease}
+      .order-card__clear:hover{background:rgba(239,69,101,0.1)}
+      .order-card__empty{margin:0;text-align:center;color:#94a3b8;font-weight:500}
+      .order-card__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:16px}
+      .order-card__item{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid #e2e8f0;padding-bottom:16px}
+      .order-card__item:last-child{border-bottom:0;padding-bottom:0}
+      .order-card__item-name{margin:0;font-weight:600;color:#0f172a}
+      .order-card__item-info{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#64748b;margin-top:4px}
+      .order-card__item-desc{display:block;font-size:13px;color:#475569;margin-top:4px;max-width:220px}
+      .order-card__item-qty{display:block;font-size:12px;color:#94a3b8;margin-top:8px;font-weight:600}
+      .order-card__item-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+      .order-card__item-price{font-weight:700;color:#0f766e}
+      .order-card__remove{border:none;background:#f1f5f9;color:#475569;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;transition:background .2s ease,color .2s ease}
+      .order-card__remove:hover{background:#e2e8f0;color:#ef4565}
+      .order-card__totals{margin:0;display:flex;flex-direction:column;gap:12px}
+      .order-card__totals-row{display:flex;justify-content:space-between;color:#475569;font-size:14px}
+      .order-card__totals-row dt{font-weight:500}
+      .order-card__totals-row dd{margin:0;font-weight:700;color:#0f172a}
+      .order-card__confirm{border:none;background:#ef4565;color:#fff;font-weight:700;border-radius:999px;padding:14px;cursor:pointer;font-size:16px;box-shadow:0 14px 30px rgba(239,69,101,0.4);transition:transform .2s ease,box-shadow .2s ease}
+      .order-card__confirm:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(239,69,101,0.45)}
+      .order-card__confirm:active{transform:translateY(1px)}
+      @media (max-width:520px){
+        .order-card{border-radius:0;min-height:100vh;max-width:none}
+        .order-card__item{flex-direction:column;align-items:flex-start}
+        .order-card__item-actions{align-items:flex-start}
+      }
     </style>
   </head>
   <body>
